@@ -202,13 +202,32 @@
 
   .title {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(3rem, 8vw, 6rem);
+    font-size: clamp(1.8rem, 7vw, 6rem);
     font-weight: 700;
     line-height: 1.1;
     text-align: center;
-    color: var(--pink-dark);
+    white-space: nowrap;
+    background: linear-gradient(
+      105deg,
+      #6B2D4A 0%,
+      #C0A0B0 20%,
+      #FFFFFF 30%,
+      #E8C0D0 40%,
+      #6B2D4A 55%,
+      #D4B0C0 65%,
+      #FFFFFF 75%,
+      #C0A0B0 85%,
+      #6B2D4A 100%
+    );
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: chromeShift 4s linear infinite;
     position: relative;
     z-index: 1;
+
+
   }
 
   .title .letter {
@@ -220,6 +239,11 @@
 
   @keyframes letterIn {
     to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes chromeShift {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 250% 50%; }
   }
 
   /* Glitch effect */
@@ -241,6 +265,7 @@
     animation: spin 4s linear infinite;
     vertical-align: middle;
     filter: drop-shadow(0 0 6px rgba(255,143,171,0.6));
+    -webkit-text-fill-color: initial;
   }
 
   .title .star-svg-wrap svg {
