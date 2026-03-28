@@ -207,6 +207,16 @@
     line-height: 1.1;
     text-align: center;
     white-space: nowrap;
+    color: var(--pink-dark);
+    position: relative;
+    z-index: 1;
+  }
+
+  .title .letter {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(15px);
+    animation: letterIn 0.4s ease forwards;
     background: linear-gradient(
       105deg,
       #6B2D4A 0%,
@@ -223,18 +233,7 @@
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: chromeShift 4s linear infinite;
-    position: relative;
-    z-index: 1;
-
-
-  }
-
-  .title .letter {
-    display: inline-block;
-    opacity: 0;
-    transform: translateY(15px);
-    animation: letterIn 0.4s ease forwards;
+    animation: letterIn 0.4s ease forwards, chromeShift 4s linear infinite;
   }
 
   @keyframes letterIn {
