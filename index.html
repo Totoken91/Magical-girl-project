@@ -227,8 +227,14 @@
     100% { background-position: 250% 50%; }
   }
 
-  /* Glitch effect */
-  .title.glitch {
+  /* Glitch effect on wrapper */
+  .title-glitch-wrap {
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+  }
+
+  .title-glitch-wrap.glitch {
     animation: glitchAnim 0.3s steps(2) forwards;
   }
 
@@ -1115,7 +1121,9 @@
 <!-- Header -->
 <header>
   <div class="header-tag">✦ Game Design Document · v0.2</div>
-  <h1 class="title">Stella <span class="star-svg-wrap"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#FF8FAB" stroke="#E05C8A" stroke-width="1"/></svg></span> Overflow</h1>
+  <div class="title-glitch-wrap">
+    <h1 class="title">Stella <span class="star-svg-wrap"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#FF8FAB" stroke="#E05C8A" stroke-width="1"/></svg></span> Overflow</h1>
+  </div>
   <p class="subtitle">Un visual novel ecchi sur le choix, la magie et la chute</p>
   <div class="header-meta">
     <div class="meta-pill"><span>Genre</span> Visual Novel / Choix multiples</div>
@@ -1823,11 +1831,11 @@
 // 2. GLITCH EFFECT AT RANDOM INTERVALS
 // ═══════════════════════════════════════════
 (function initGlitch() {
-  const title = document.querySelector('.title');
-  if (!title) return;
+  const wrap = document.querySelector('.title-glitch-wrap');
+  if (!wrap) return;
   function triggerGlitch() {
-    title.classList.add('glitch');
-    setTimeout(() => title.classList.remove('glitch'), 300);
+    wrap.classList.add('glitch');
+    setTimeout(() => wrap.classList.remove('glitch'), 300);
     const next = 10000 + Math.random() * 10000; // 10-20s
     setTimeout(triggerGlitch, next);
   }
