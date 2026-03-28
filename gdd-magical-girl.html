@@ -30,6 +30,72 @@
     font-weight: 300;
     line-height: 1.7;
     overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ─── MESH GRADIENT BACKGROUND ─── */
+  .mesh-gradient {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .mesh-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    will-change: transform;
+  }
+
+  .mesh-blob--pink {
+    width: 45vmax;
+    height: 45vmax;
+    background: #FFD6E0;
+    top: -10%;
+    left: -10%;
+    animation: blobMove1 18s ease-in-out infinite alternate;
+  }
+
+  .mesh-blob--lavender {
+    width: 40vmax;
+    height: 40vmax;
+    background: #D4CEF0;
+    top: 40%;
+    right: -10%;
+    animation: blobMove2 22s ease-in-out infinite alternate;
+  }
+
+  .mesh-blob--teal {
+    width: 38vmax;
+    height: 38vmax;
+    background: #B0E8E8;
+    bottom: -10%;
+    left: 30%;
+    animation: blobMove3 20s ease-in-out infinite alternate;
+  }
+
+  @keyframes blobMove1 {
+    0%   { transform: translate(0, 0) scale(1); }
+    33%  { transform: translate(15vw, 20vh) scale(1.1); }
+    66%  { transform: translate(-5vw, 35vh) scale(0.95); }
+    100% { transform: translate(10vw, 10vh) scale(1.05); }
+  }
+
+  @keyframes blobMove2 {
+    0%   { transform: translate(0, 0) scale(1); }
+    33%  { transform: translate(-20vw, -10vh) scale(1.05); }
+    66%  { transform: translate(-10vw, 15vh) scale(1.1); }
+    100% { transform: translate(-15vw, -5vh) scale(0.95); }
+  }
+
+  @keyframes blobMove3 {
+    0%   { transform: translate(0, 0) scale(1); }
+    33%  { transform: translate(10vw, -15vh) scale(1.08); }
+    66%  { transform: translate(-15vw, -10vh) scale(0.97); }
+    100% { transform: translate(5vw, -20vh) scale(1.03); }
   }
 
   /* ─── NOISE TEXTURE OVERLAY ─── */
@@ -37,10 +103,22 @@
     content: '';
     position: fixed;
     inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     pointer-events: none;
     z-index: 0;
-    opacity: 0.5;
+    opacity: 0.06;
+  }
+
+  /* ─── SCROLL PROGRESS BAR ─── */
+  .scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: linear-gradient(to right, var(--pink-deep), var(--teal));
+    z-index: 9999;
+    transition: width 0.05s linear;
   }
 
   /* ─── HERO HEADER ─── */
@@ -131,18 +209,92 @@
     color: var(--pink-dark);
     position: relative;
     z-index: 1;
-    animation: fadeDown 0.8s 0.1s ease both;
   }
 
-  .title .star-inline {
-    color: var(--pink-deep);
+  .title .letter {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(15px);
+    animation: letterIn 0.4s ease forwards;
+  }
+
+  @keyframes letterIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Glitch effect */
+  .title.glitch {
+    animation: glitchAnim 0.3s steps(2) forwards;
+  }
+
+  @keyframes glitchAnim {
+    0%   { clip-path: inset(20% 0 40% 0); transform: translate(-2px, 1px); }
+    20%  { clip-path: inset(60% 0 10% 0); transform: translate(2px, -1px); }
+    40%  { clip-path: inset(10% 0 70% 0); transform: translate(-1px, 2px); }
+    60%  { clip-path: inset(50% 0 20% 0); transform: translate(1px, -2px); }
+    80%  { clip-path: inset(30% 0 50% 0); transform: translate(-2px, 1px); }
+    100% { clip-path: inset(0); transform: translate(0); }
+  }
+
+  .title .star-svg-wrap {
     display: inline-block;
     animation: spin 4s linear infinite;
+    vertical-align: middle;
+    filter: drop-shadow(0 0 6px rgba(255,143,171,0.6));
+  }
+
+  .title .star-svg-wrap svg {
+    width: 0.6em;
+    height: 0.6em;
+    display: block;
   }
 
   @keyframes spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+  }
+
+  @keyframes starGlow {
+    0%, 100% { filter: drop-shadow(0 0 4px rgba(255,143,171,0.4)); }
+    50% { filter: drop-shadow(0 0 12px rgba(255,143,171,0.9)); }
+  }
+
+  .title .star-svg-wrap {
+    animation: spin 4s linear infinite, starGlow 2s ease-in-out infinite;
+  }
+
+  /* ─── CUSTOM CURSOR ─── */
+  .cursor-star {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+    z-index: 99999;
+    color: var(--pink-deep);
+    font-size: 16px;
+    line-height: 1;
+    text-align: center;
+    transform: translate(-50%, -50%);
+  }
+
+  .cursor-trail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 99998;
+    color: var(--pink-mid);
+    font-size: 10px;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    animation: trailFade 0.6s ease forwards;
+  }
+
+  @keyframes trailFade {
+    0% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.2); }
   }
 
   .subtitle {
@@ -216,6 +368,7 @@
     margin-top: 5rem;
     opacity: 0;
     transform: translateY(30px);
+    filter: blur(8px);
     animation: revealSection 0.6s ease forwards;
   }
 
@@ -229,7 +382,7 @@
   .section:nth-child(8) { animation-delay: 0.45s; }
 
   @keyframes revealSection {
-    to { opacity: 1; transform: translateY(0); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
   }
 
   .section-label {
@@ -251,6 +404,23 @@
     background: linear-gradient(to right, var(--pink-mid), transparent);
   }
 
+  /* Blinking caret kawaii on section-label (via JS-injected span) */
+  .section-label .caret {
+    display: inline-block;
+    width: 2px;
+    height: 0.85em;
+    background: var(--pink-accent);
+    animation: caretBlink 1s step-end infinite;
+    margin-left: 0.3rem;
+    flex-shrink: 0;
+    vertical-align: middle;
+  }
+
+  @keyframes caretBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
   .section-title {
     font-family: 'Playfair Display', serif;
     font-size: clamp(1.6rem, 3vw, 2.2rem);
@@ -258,6 +428,24 @@
     color: var(--pink-dark);
     margin-bottom: 1.5rem;
     line-height: 1.2;
+    position: relative;
+    display: inline-block;
+  }
+
+  .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: linear-gradient(to right, var(--pink-deep), var(--pink-mid));
+    border-radius: 2px;
+    transition: width 0.6s ease;
+  }
+
+  .section-title.in-view::after {
+    width: 100%;
   }
 
   p {
@@ -276,6 +464,42 @@
     padding: 1.5rem 2rem;
     margin-bottom: 1rem;
     transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border-left: 4px solid transparent;
+  }
+
+  /* Shimmer effect */
+  .card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.2) 45%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.2) 55%, transparent 60%);
+    transform: translateX(-100%);
+    transition: none;
+    pointer-events: none;
+  }
+
+  .card:hover::after {
+    animation: shimmer 0.6s ease forwards;
+  }
+
+  @keyframes shimmer {
+    to { transform: translateX(100%); }
+  }
+
+  /* Left border gradient that scales up on viewport entry */
+  .card.in-view {
+    border-image: linear-gradient(to bottom, var(--pink-deep), var(--teal)) 1;
+    border-image-slice: 1;
+    border-left-width: 4px;
+    border-left-style: solid;
+    animation: borderReveal 0.5s ease forwards;
+  }
+
+  @keyframes borderReveal {
+    from { border-left-width: 0px; }
+    to { border-left-width: 4px; }
   }
 
   .card:hover {
@@ -310,6 +534,7 @@
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1rem;
     margin-top: 1rem;
+    perspective: 800px;
   }
 
   .ending-card {
@@ -317,7 +542,26 @@
     padding: 1.5rem;
     position: relative;
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: box-shadow 0.3s ease, filter 0.3s ease;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  /* Floating particle in each ending card */
+  .ending-particle {
+    position: absolute;
+    top: 1rem;
+    right: 1.2rem;
+    font-size: 1rem;
+    opacity: 0.4;
+    animation: floatParticle 3s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  @keyframes floatParticle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
   }
 
   .ending-card::before {
@@ -332,7 +576,7 @@
   }
 
   .ending-card:hover::before { opacity: 1; }
-  .ending-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.1); }
+  .ending-card:hover { box-shadow: 0 16px 48px rgba(0,0,0,0.1); }
 
   .ending-good { background: linear-gradient(135deg, #D4F5E9 0%, #B8EDD9 100%); border: 1px solid #A8E4CA; }
   .ending-neutral { background: linear-gradient(135deg, #E8E4F8 0%, #D4CEF0 100%); border: 1px solid #C8C0E8; }
@@ -415,7 +659,19 @@
     top: 8px;
     bottom: 8px;
     width: 2px;
+    background: rgba(255,179,198,0.2);
+  }
+
+  /* Timeline fill line that grows on scroll */
+  .timeline-fill {
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 2px;
+    height: 0;
     background: linear-gradient(to bottom, var(--pink-mid), var(--teal));
+    transition: height 0.3s ease;
+    z-index: 1;
   }
 
   .timeline-item {
@@ -432,6 +688,22 @@
     border-radius: 50%;
     border: 2px solid white;
     box-shadow: 0 2px 8px rgba(224,92,138,0.3);
+    z-index: 2;
+  }
+
+  /* Ping animation on timeline dots */
+  .timeline-dot.ping::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid var(--pink-deep);
+    animation: dotPing 0.8s ease-out forwards;
+  }
+
+  @keyframes dotPing {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(2.5); opacity: 0; }
   }
 
   .act1 .timeline-dot { background: var(--pink-deep); }
@@ -670,7 +942,17 @@
     z-index: 1;
   }
 
-  footer .heart { color: var(--pink-deep); }
+  footer .heart {
+    color: var(--pink-deep);
+    display: inline-block;
+    animation: heartbeat 1s ease infinite;
+  }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); text-shadow: 0 0 0 transparent; }
+    15% { transform: scale(1.3); text-shadow: 0 0 12px rgba(255,143,171,0.7); }
+    30% { transform: scale(1); text-shadow: 0 0 0 transparent; }
+  }
 
   /* ─── SCROLLBAR ─── */
   ::-webkit-scrollbar { width: 6px; }
@@ -735,15 +1017,32 @@
     color: var(--pink-accent);
   }
 
+  a, button, nav a, .card, .ending-card, .tech-item {
+    cursor: none;
+  }
+
   @media (max-width: 600px) {
     nav { display: none; }
     .endings-grid { grid-template-columns: 1fr; }
     .tech-grid { grid-template-columns: 1fr 1fr; }
     .roadmap-grid { grid-template-columns: 1fr; }
+    /* Restore default cursor on mobile (no hover) */
+    body, a, button, nav a, .card, .ending-card, .tech-item { cursor: auto; }
+    .cursor-star, .cursor-trail { display: none; }
   }
 </style>
 </head>
 <body>
+
+<!-- Scroll Progress Bar -->
+<div class="scroll-progress"></div>
+
+<!-- Mesh Gradient Background -->
+<div class="mesh-gradient" aria-hidden="true">
+  <div class="mesh-blob mesh-blob--pink"></div>
+  <div class="mesh-blob mesh-blob--lavender"></div>
+  <div class="mesh-blob mesh-blob--teal"></div>
+</div>
 
 <!-- Floating Stars -->
 <div class="stars-bg" aria-hidden="true">
@@ -770,7 +1069,7 @@
 <!-- Header -->
 <header>
   <div class="header-tag">✦ Game Design Document · v0.1</div>
-  <h1 class="title">Magical Girl<br><span class="star-inline">★</span> Overdose</h1>
+  <h1 class="title">Magical Girl<br><span class="star-svg-wrap"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#FF8FAB" stroke="#E05C8A" stroke-width="1"/></svg></span> Overdose</h1>
   <p class="subtitle">Un visual novel sur le choix, la magie et la chute</p>
   <div class="header-meta">
     <div class="meta-pill"><span>Genre</span> Visual Novel / Choix multiples</div>
@@ -958,18 +1257,21 @@
 
     <div class="endings-grid">
       <div class="ending-card ending-good">
+        <span class="ending-particle">★</span>
         <div class="ending-label">★ Good Ending</div>
         <div class="ending-name">Love Ending</div>
         <div class="ending-desc">Étoile gère sa vie grâce à toi. Elle a appris à utiliser ses pouvoirs sainement. Vous partagez une vraie connexion. Elle sauve la ville — et reste elle-même.</div>
       </div>
 
       <div class="ending-card ending-neutral">
+        <span class="ending-particle" style="animation-delay:0.5s">✦</span>
         <div class="ending-label">◆ Neutral Ending</div>
         <div class="ending-name">Magical Ending</div>
         <div class="ending-desc">Elle gère sans toi. Vous êtes en bons termes mais distants. Elle est devenue quelqu'un de fort, mais seul. Un écran géant l'affiche en mode "sauveur officiel de la ville". Elle sourit. Ça sonne creux.</div>
       </div>
 
       <div class="ending-card ending-bad">
+        <span class="ending-particle" style="animation-delay:1s">★</span>
         <div class="ending-label">✖ Bad Ending</div>
         <div class="ending-name">Heroic Ending</div>
         <div class="ending-desc">Tes recommandations l'ont poussée à bout. Elle est devenue une sociopathe brillante. La ville est sauvée. Elle te menace de mort si tu la recontactes. "Héros" dans les journaux, monstre en privé.</div>
@@ -1180,22 +1482,137 @@
 </footer>
 
 <script>
-// Intersection Observer pour animations au scroll
-const sections = document.querySelectorAll('.section');
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.style.animationPlayState = 'running';
+// ═══════════════════════════════════════════
+// 1. LETTER STAGGER ANIMATION ON TITLE
+// ═══════════════════════════════════════════
+(function initLetterStagger() {
+  const title = document.querySelector('.title');
+  if (!title) return;
+  const html = title.innerHTML;
+  // Split into segments: the star-svg-wrap, <br>, and text chars
+  const parts = [];
+  let i = 0;
+  while (i < html.length) {
+    // Keep HTML tags intact
+    if (html[i] === '<') {
+      const close = html.indexOf('>', i);
+      const tag = html.substring(i, close + 1);
+      // If it's the star-svg-wrap span, grab the full element
+      if (tag.includes('star-svg-wrap')) {
+        // find the closing </span>
+        const endTag = '</span>';
+        // Need to find the correct closing span (nested spans)
+        let depth = 1;
+        let j = close + 1;
+        while (j < html.length && depth > 0) {
+          if (html.substring(j, j + 6) === '<span ') depth++;
+          if (html.substring(j, j + 7) === '</span>') { depth--; if (depth === 0) break; }
+          j++;
+        }
+        parts.push(html.substring(i, j + 7));
+        i = j + 7;
+      } else {
+        parts.push(tag);
+        i = close + 1;
+      }
+    } else if (html[i] === ' ') {
+      parts.push(' ');
+      i++;
+    } else {
+      parts.push(html[i]);
+      i++;
     }
+  }
+
+  let delay = 0;
+  const newHtml = parts.map(p => {
+    // Skip wrapping tags and whitespace-ish
+    if (p.startsWith('<br') || p.startsWith('<BR')) return p;
+    if (p.startsWith('<') && !p.includes('star-svg-wrap')) return p;
+    if (p === ' ') { delay += 0.02; return ' '; }
+    if (p.includes('star-svg-wrap')) {
+      delay += 0.05;
+      return '<span class="letter" style="animation-delay:' + delay.toFixed(2) + 's">' + p + '</span>';
+    }
+    delay += 0.05;
+    return '<span class="letter" style="animation-delay:' + delay.toFixed(2) + 's">' + p + '</span>';
+  }).join('');
+  title.innerHTML = newHtml;
+})();
+
+// ═══════════════════════════════════════════
+// 2. GLITCH EFFECT AT RANDOM INTERVALS
+// ═══════════════════════════════════════════
+(function initGlitch() {
+  const title = document.querySelector('.title');
+  if (!title) return;
+  function triggerGlitch() {
+    title.classList.add('glitch');
+    setTimeout(() => title.classList.remove('glitch'), 300);
+    const next = 10000 + Math.random() * 10000; // 10-20s
+    setTimeout(triggerGlitch, next);
+  }
+  setTimeout(triggerGlitch, 8000 + Math.random() * 5000);
+})();
+
+// ═══════════════════════════════════════════
+// 3. CUSTOM CURSOR + STAR TRAIL
+// ═══════════════════════════════════════════
+(function initCursor() {
+  // Don't init on touch devices
+  if ('ontouchstart' in window) return;
+
+  const cursor = document.createElement('div');
+  cursor.className = 'cursor-star';
+  cursor.textContent = '✦';
+  document.body.appendChild(cursor);
+
+  let mouseX = -100, mouseY = -100;
+  let curX = -100, curY = -100;
+  let trailTimer = 0;
+
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
   });
-}, { threshold: 0.1 });
 
-sections.forEach(s => {
-  s.style.animationPlayState = 'paused';
-  observer.observe(s);
-});
+  function lerp(a, b, t) { return a + (b - a) * t; }
 
-// Stars animation positions aléatoires
+  function animate() {
+    curX = lerp(curX, mouseX, 0.15);
+    curY = lerp(curY, mouseY, 0.15);
+    cursor.style.left = curX + 'px';
+    cursor.style.top = curY + 'px';
+
+    trailTimer++;
+    if (trailTimer % 4 === 0) {
+      spawnTrail(curX, curY);
+    }
+    requestAnimationFrame(animate);
+  }
+
+  const trailPool = [];
+  function spawnTrail(x, y) {
+    const t = document.createElement('div');
+    t.className = 'cursor-trail';
+    t.textContent = ['✦', '★', '✧'][Math.floor(Math.random() * 3)];
+    t.style.left = x + 'px';
+    t.style.top = y + 'px';
+    document.body.appendChild(t);
+    trailPool.push(t);
+    if (trailPool.length > 5) {
+      const old = trailPool.shift();
+      if (old.parentNode) old.parentNode.removeChild(old);
+    }
+    setTimeout(() => { if (t.parentNode) t.parentNode.removeChild(t); }, 600);
+  }
+
+  requestAnimationFrame(animate);
+})();
+
+// ═══════════════════════════════════════════
+// ORIGINAL: Stars animation positions aléatoires
+// ═══════════════════════════════════════════
 const starEls = document.querySelectorAll('.star-el');
 starEls.forEach(star => {
   const delay = Math.random() * 4;
@@ -1203,6 +1620,150 @@ starEls.forEach(star => {
   star.style.animationDuration = duration + 's';
   star.style.animationDelay = delay + 's';
 });
+
+// ═══════════════════════════════════════════
+// 4. SCROLL PROGRESS BAR
+// ═══════════════════════════════════════════
+(function initScrollProgress() {
+  const bar = document.querySelector('.scroll-progress');
+  if (!bar) return;
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = h > 0 ? (window.scrollY / h) * 100 : 0;
+    bar.style.width = pct + '%';
+  }, { passive: true });
+})();
+
+// ═══════════════════════════════════════════
+// 5. SECTION REVEAL (blur + translateY) via IO
+// ═══════════════════════════════════════════
+(function initSectionReveal() {
+  const sections = document.querySelectorAll('.section');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.animationPlayState = 'running';
+      }
+    });
+  }, { threshold: 0.1 });
+  sections.forEach(s => {
+    s.style.animationPlayState = 'paused';
+    observer.observe(s);
+  });
+})();
+
+// ═══════════════════════════════════════════
+// 6. CARD LEFT BORDER REVEAL ON VIEWPORT ENTRY
+// ═══════════════════════════════════════════
+(function initCardBorder() {
+  const cards = document.querySelectorAll('.card');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  cards.forEach(c => obs.observe(c));
+})();
+
+// ═══════════════════════════════════════════
+// 7. SECTION-TITLE UNDERLINE REVEAL ON SCROLL
+// ═══════════════════════════════════════════
+(function initTitleUnderline() {
+  const titles = document.querySelectorAll('.section-title');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  titles.forEach(t => obs.observe(t));
+})();
+
+// ═══════════════════════════════════════════
+// 7b. SECTION-LABEL: INJECT BLINKING CARET
+// ═══════════════════════════════════════════
+(function initCarets() {
+  document.querySelectorAll('.section-label').forEach(label => {
+    // Insert caret span right after the text node, before ::after
+    const caret = document.createElement('span');
+    caret.className = 'caret';
+    // Insert before the first child that is not a text node, or at end
+    label.insertBefore(caret, label.querySelector('*:last-child') || null);
+  });
+})();
+
+// ═══════════════════════════════════════════
+// 8. TIMELINE: PING DOTS + PROGRESSIVE FILL
+// ═══════════════════════════════════════════
+(function initTimeline() {
+  const timeline = document.querySelector('.timeline');
+  if (!timeline) return;
+
+  // Create the fill element
+  const fill = document.createElement('div');
+  fill.className = 'timeline-fill';
+  timeline.prepend(fill);
+
+  const dots = timeline.querySelectorAll('.timeline-dot');
+  const items = timeline.querySelectorAll('.timeline-item');
+  const timelineRect = () => timeline.getBoundingClientRect();
+  const timelineTop = () => timeline.offsetTop;
+
+  // Ping dots on scroll reveal
+  const dotObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('ping');
+        dotObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  dots.forEach(d => dotObs.observe(d));
+
+  // Fill line progressively
+  function updateFill() {
+    const rect = timelineRect();
+    const viewMid = window.innerHeight * 0.7;
+    const progress = Math.min(Math.max((viewMid - rect.top) / rect.height, 0), 1);
+    fill.style.height = (progress * 100) + '%';
+    requestAnimationFrame(updateFill);
+  }
+  requestAnimationFrame(updateFill);
+})();
+
+// ═══════════════════════════════════════════
+// 9. ENDING CARDS: 3D TILT ON HOVER
+// ═══════════════════════════════════════════
+(function initEndingTilt() {
+  const cards = document.querySelectorAll('.ending-card');
+  cards.forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const midX = rect.width / 2;
+      const midY = rect.height / 2;
+      const rotY = ((x - midX) / midX) * 8;  // max 8deg
+      const rotX = ((midY - y) / midY) * 8;
+      card.style.transform = 'rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg)';
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'rotateX(0) rotateY(0)';
+      card.style.transition = 'transform 0.4s ease, box-shadow 0.3s ease';
+      setTimeout(() => { card.style.transition = 'box-shadow 0.3s ease, filter 0.3s ease'; }, 400);
+    });
+
+    card.addEventListener('mouseenter', () => {
+      card.style.transition = 'box-shadow 0.3s ease, filter 0.3s ease';
+    });
+  });
+})();
 </script>
 </body>
 </html>
