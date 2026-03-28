@@ -654,91 +654,128 @@
     line-height: 1.6;
   }
 
-  /* ─── SCENE TIMELINE ─── */
-  .timeline {
-    position: relative;
-    padding-left: 2rem;
+  /* ─── SCENE ACCORDION ─── */
+  .accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
   }
 
-  .timeline::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 8px;
-    bottom: 8px;
-    width: 2px;
-    background: rgba(255,179,198,0.2);
+  .accordion-item {
+    border-radius: 14px;
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,143,171,0.2);
+    border-left: 4px solid transparent;
+    overflow: hidden;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
   }
 
-  /* Timeline fill line that grows on scroll */
-  .timeline-fill {
-    position: absolute;
-    left: 0;
-    top: 8px;
-    width: 2px;
-    height: 0;
-    background: linear-gradient(to bottom, var(--pink-mid), var(--teal));
-    transition: height 0.3s ease;
-    z-index: 1;
+  .accordion-item.act1 { border-left-color: var(--pink-deep); }
+  .accordion-item.act2 { border-left-color: #C67FD8; }
+  .accordion-item.act3 { border-left-color: var(--teal-dark); }
+
+  .accordion-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem 1.2rem;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s ease;
   }
 
-  .timeline-item {
-    position: relative;
-    margin-bottom: 1.5rem;
+  .accordion-header:hover {
+    background: rgba(255,255,255,0.4);
   }
 
-  .timeline-dot {
-    position: absolute;
-    left: -2.4rem;
-    top: 0.4rem;
-    width: 12px;
-    height: 12px;
+  .accordion-dot {
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
-    border: 2px solid white;
-    box-shadow: 0 2px 8px rgba(224,92,138,0.3);
-    z-index: 2;
+    flex-shrink: 0;
   }
 
-  /* Ping animation on timeline dots */
-  .timeline-dot.ping::after {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    border-radius: 50%;
-    border: 2px solid var(--pink-deep);
-    animation: dotPing 0.8s ease-out forwards;
+  .act1 .accordion-dot { background: var(--pink-deep); }
+  .act2 .accordion-dot { background: #C67FD8; }
+  .act3 .accordion-dot { background: var(--teal-dark); }
+
+  .accordion-meta {
+    flex: 1;
+    min-width: 0;
   }
 
-  @keyframes dotPing {
-    0% { transform: scale(1); opacity: 1; }
-    100% { transform: scale(2.5); opacity: 0; }
-  }
-
-  .act1 .timeline-dot { background: var(--pink-deep); }
-  .act2 .timeline-dot { background: var(--pink-accent); }
-  .act3 .timeline-dot { background: var(--teal-dark); }
-
-  .timeline-act {
+  .accordion-act {
     font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
     color: var(--grey-light);
-    margin-bottom: 0.3rem;
   }
 
-  .timeline-scene {
+  .accordion-scene {
     font-family: 'Playfair Display', serif;
     font-size: 1rem;
     font-weight: 700;
     color: var(--pink-dark);
-    margin-bottom: 0.2rem;
   }
 
-  .timeline-desc {
-    font-size: 0.85rem;
+  .accordion-chevron {
+    font-size: 0.8rem;
     color: var(--grey-light);
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  .accordion-item.open .accordion-chevron {
+    transform: rotate(180deg);
+  }
+
+  .accordion-item.open {
+    box-shadow: 0 8px 30px rgba(224,92,138,0.1);
+  }
+
+  .accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+
+  .accordion-body-inner {
+    padding: 0 1.2rem 1.2rem 2.6rem;
+  }
+
+  .accordion-blocks {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+
+  @media (max-width: 600px) {
+    .accordion-blocks { grid-template-columns: 1fr; }
+  }
+
+  .accordion-block {
+    background: rgba(255,245,248,0.6);
+    border: 1px solid rgba(255,143,171,0.15);
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+  }
+
+  .accordion-block-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--pink-accent);
+    margin-bottom: 0.4rem;
+  }
+
+  .accordion-block p {
+    font-size: 0.82rem;
     line-height: 1.5;
+    margin: 0;
+    color: var(--grey-text);
   }
 
   .choice-badge {
@@ -1198,62 +1235,278 @@
     <div class="section-label">05 — Structure narrative</div>
     <h2 class="section-title">Les scènes</h2>
 
-    <div class="timeline">
+    <div class="accordion">
 
-      <div class="timeline-item act1">
-        <div class="timeline-dot"></div>
-        <div class="timeline-act">Acte 1 — L'Éveil</div>
-        <div class="timeline-scene">Scène 1 : La rencontre</div>
-        <div class="timeline-desc">Étoile manifeste ses pouvoirs pour la première fois devant vous. Elle est terrifiée. Lunae apparaît. <span class="choice-badge">CHOIX</span></div>
+      <!-- Scène 1 -->
+      <div class="accordion-item act1">
+        <div class="accordion-header">
+          <div class="accordion-dot"></div>
+          <div class="accordion-meta">
+            <div class="accordion-act">Acte 1 — L'Éveil</div>
+            <div class="accordion-scene">Scène 1 : La rencontre <span class="choice-badge">CHOIX</span></div>
+          </div>
+          <div class="accordion-chevron">▼</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <div class="accordion-blocks">
+              <div class="accordion-block">
+                <div class="accordion-block-label">Résumé</div>
+                <p>Étoile manifeste ses pouvoirs pour la première fois devant vous. Elle est terrifiée. Lunae apparaît et propose de devenir son guide.</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Dialogues clés</div>
+                <p>« Je… je sais pas ce qui m'arrive… » — Étoile tremblante. Lunae : « Ne t'inquiète pas, c'est normal. Tu es spéciale. »</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Choix & Score</div>
+                <p>Rassurer Étoile (+5) · Minimiser ses peurs (+0) · Pousser à explorer ses pouvoirs immédiatement (−3)</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Assets nécessaires</div>
+                <p>BG : parc de nuit · Sprite Étoile : terrifiée, surprise · Sprite Lunae : apparition · SFX : magie, vent</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="timeline-item act1">
-        <div class="timeline-dot"></div>
-        <div class="timeline-act">Acte 1 — L'Éveil</div>
-        <div class="timeline-scene">Scène 2 : La première mission</div>
-        <div class="timeline-desc">Une Distorsion dans le lycée. Elle hésite à intervenir. Comment la préparez-vous ? <span class="choice-badge">CHOIX</span></div>
+      <!-- Scène 2 -->
+      <div class="accordion-item act1">
+        <div class="accordion-header">
+          <div class="accordion-dot"></div>
+          <div class="accordion-meta">
+            <div class="accordion-act">Acte 1 — L'Éveil</div>
+            <div class="accordion-scene">Scène 2 : La première mission <span class="choice-badge">CHOIX</span></div>
+          </div>
+          <div class="accordion-chevron">▼</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <div class="accordion-blocks">
+              <div class="accordion-block">
+                <div class="accordion-block-label">Résumé</div>
+                <p>Une Distorsion apparaît dans le lycée. Elle hésite à intervenir. Comment la préparez-vous ?</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Dialogues clés</div>
+                <p>« Et si je blesse quelqu'un ? » — Étoile. Lunae : « Tu blesseras plus de gens en ne faisant rien. »</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Choix & Score</div>
+                <p>L'entraîner d'abord (+3) · L'envoyer directement (+0) · Lui dire que c'est son devoir (−2)</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Assets nécessaires</div>
+                <p>BG : couloir lycée, salle de classe · Sprite Étoile : inquiète, déterminée · VFX : distorsion glitch</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="timeline-item act1">
-        <div class="timeline-dot"></div>
-        <div class="timeline-act">Acte 1 — L'Éveil</div>
-        <div class="timeline-scene">Scène 3 : Le lendemain</div>
-        <div class="timeline-desc">Elle rentre chez elle épuisée. Vous pouvez l'appeler, la laisser tranquille, ou lui envoyer un message. Choix "couleur" qui structure la relation.</div>
+      <!-- Scène 3 -->
+      <div class="accordion-item act1">
+        <div class="accordion-header">
+          <div class="accordion-dot"></div>
+          <div class="accordion-meta">
+            <div class="accordion-act">Acte 1 — L'Éveil</div>
+            <div class="accordion-scene">Scène 3 : Le lendemain</div>
+          </div>
+          <div class="accordion-chevron">▼</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <div class="accordion-blocks">
+              <div class="accordion-block">
+                <div class="accordion-block-label">Résumé</div>
+                <p>Elle rentre chez elle épuisée. Vous pouvez l'appeler, la laisser tranquille, ou lui envoyer un message. Choix "couleur" qui structure la relation.</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Dialogues clés</div>
+                <p>Selon le choix : message vocal inquiet, SMS rassurant « t'as géré 💪 », ou silence radio.</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Choix & Score</div>
+                <p>Choix de couleur — pas d'impact score. Influence le ton des dialogues futurs et la proximité relationnelle.</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Assets nécessaires</div>
+                <p>BG : chambre d'Étoile (soir) · Sprite Étoile : fatiguée · UI : écran téléphone</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="timeline-item act2">
-        <div class="timeline-dot"></div>
-        <div class="timeline-act">Acte 2 — La Pression</div>
-        <div class="timeline-scene">Scène 4 : La célébrité</div>
-        <div class="timeline-desc">La ville commence à la reconnaître. Des fans apparaissent. Lunae suggère d'exploiter ça. <span class="choice-badge">CHOIX CLÉ</span></div>
+      <!-- Scène 4 -->
+      <div class="accordion-item act2">
+        <div class="accordion-header">
+          <div class="accordion-dot"></div>
+          <div class="accordion-meta">
+            <div class="accordion-act">Acte 2 — La Pression</div>
+            <div class="accordion-scene">Scène 4 : La célébrité <span class="choice-badge">CHOIX CLÉ</span></div>
+          </div>
+          <div class="accordion-chevron">▼</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <div class="accordion-blocks">
+              <div class="accordion-block">
+                <div class="accordion-block-label">Résumé</div>
+                <p>La ville commence à la reconnaître. Des fans apparaissent. Lunae suggère d'exploiter sa notoriété.</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Dialogues clés</div>
+                <p>Lunae : « Les gens t'adorent. Utilise ça. » Étoile : « C'est bizarre, ils ne me connaissent même pas vraiment… »</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Choix & Score</div>
+                <p>Protéger sa vie privée (+8) · Accepter modérément (+2) · Pousser à l'exposition totale (−6)</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Assets nécessaires</div>
+                <p>BG : rue, réseaux sociaux UI · Sprite Étoile : gênée, flatée · Sprites fans (silhouettes) · Sprite Lunae : manipulatrice</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="timeline-item act2">
-        <div class="timeline-dot"></div>
-        <div class="timeline-act">Acte 2 — La Pression</div>
-        <div class="timeline-scene">Scène 5 : La crise</div>
-        <div class="timeline-desc">Étoile crack. Elle ne veut plus utiliser ses pouvoirs. C'est le choix le plus difficile du jeu. <span class="choice-badge">CHOIX CLÉ</span></div>
+      <!-- Scène 5 -->
+      <div class="accordion-item act2">
+        <div class="accordion-header">
+          <div class="accordion-dot"></div>
+          <div class="accordion-meta">
+            <div class="accordion-act">Acte 2 — La Pression</div>
+            <div class="accordion-scene">Scène 5 : La crise <span class="choice-badge">CHOIX CLÉ</span></div>
+          </div>
+          <div class="accordion-chevron">▼</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <div class="accordion-blocks">
+              <div class="accordion-block">
+                <div class="accordion-block-label">Résumé</div>
+                <p>Étoile crack. Elle ne veut plus utiliser ses pouvoirs. C'est le choix le plus difficile du jeu.</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Dialogues clés</div>
+                <p>« J'en peux plus. Je suis pas une héroïne, je suis juste une fille fatiguée. » — Étoile en pleurs.</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Choix & Score</div>
+                <p>La laisser se reposer (+10) · Négocier un compromis (+3) · Lui rappeler ses responsabilités (−8)</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Assets nécessaires</div>
+                <p>BG : chambre d'Étoile (nuit, sombre) · Sprite Étoile : pleurs, colère, épuisement · Musique : piano triste</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="timeline-item act2">
-        <div class="timeline-dot"></div>
-        <div class="timeline-act">Acte 2 — La Pression</div>
-        <div class="timeline-scene">Scène 6 : La révélation de Lunae</div>
-        <div class="timeline-desc">On découvre quelque chose sur Lunae. Ce qu'on fait avec cette information change tout. <span class="choice-badge">CHOIX CLÉ</span></div>
+      <!-- Scène 6 -->
+      <div class="accordion-item act2">
+        <div class="accordion-header">
+          <div class="accordion-dot"></div>
+          <div class="accordion-meta">
+            <div class="accordion-act">Acte 2 — La Pression</div>
+            <div class="accordion-scene">Scène 6 : La révélation de Lunae <span class="choice-badge">CHOIX CLÉ</span></div>
+          </div>
+          <div class="accordion-chevron">▼</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <div class="accordion-blocks">
+              <div class="accordion-block">
+                <div class="accordion-block-label">Résumé</div>
+                <p>On découvre quelque chose sur Lunae. Ce qu'on fait avec cette information change tout.</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Dialogues clés</div>
+                <p>« Elle ne t'aide pas, Étoile. Elle se nourrit de toi. » — Vous pouvez le dire ou le taire.</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Choix & Score</div>
+                <p>Révéler la vérité à Étoile (+10) · Garder le secret et surveiller (−2) · Confronter Lunae seul (−5)</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Assets nécessaires</div>
+                <p>BG : lieu mystérieux / dimension de Lunae · Sprite Lunae : vraie forme · VFX : révélation, énergie sombre</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="timeline-item act3">
-        <div class="timeline-dot"></div>
-        <div class="timeline-act">Acte 3 — Le Dénouement</div>
-        <div class="timeline-scene">Scène 7 : La Distorsion finale</div>
-        <div class="timeline-desc">La plus grande Distorsion encore. Étoile doit tout donner. Votre dernière décision la prépare — ou non. <span class="choice-badge">CHOIX CLÉ</span></div>
+      <!-- Scène 7 -->
+      <div class="accordion-item act3">
+        <div class="accordion-header">
+          <div class="accordion-dot"></div>
+          <div class="accordion-meta">
+            <div class="accordion-act">Acte 3 — Le Dénouement</div>
+            <div class="accordion-scene">Scène 7 : La Distorsion finale <span class="choice-badge">CHOIX CLÉ</span></div>
+          </div>
+          <div class="accordion-chevron">▼</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <div class="accordion-blocks">
+              <div class="accordion-block">
+                <div class="accordion-block-label">Résumé</div>
+                <p>La plus grande Distorsion encore. Étoile doit tout donner. Votre dernière décision la prépare — ou non.</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Dialogues clés</div>
+                <p>« Dis-moi que ça va aller. Même si c'est un mensonge. » — Étoile avant le combat final.</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Choix & Score</div>
+                <p>Être honnête et la soutenir (+12) · Mentir pour la rassurer (+0) · La pousser sans ménagement (−10)</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Assets nécessaires</div>
+                <p>BG : ville en ruines / ciel déchiré · Sprite Étoile : transformation finale · Boss VFX · Musique : épique + variantes</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="timeline-item act3">
-        <div class="timeline-dot"></div>
-        <div class="timeline-act">Acte 3 — Le Dénouement</div>
-        <div class="timeline-scene">Scène 8 : L'épilogue</div>
-        <div class="timeline-desc">La fin se déroule selon votre score total. 3 épilогues différents (+1 caché). Générique avec musique douce ou inquiétante selon la route.</div>
+      <!-- Scène 8 -->
+      <div class="accordion-item act3">
+        <div class="accordion-header">
+          <div class="accordion-dot"></div>
+          <div class="accordion-meta">
+            <div class="accordion-act">Acte 3 — Le Dénouement</div>
+            <div class="accordion-scene">Scène 8 : L'épilogue</div>
+          </div>
+          <div class="accordion-chevron">▼</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <div class="accordion-blocks">
+              <div class="accordion-block">
+                <div class="accordion-block-label">Résumé</div>
+                <p>La fin se déroule selon votre score total. 3 épilogues différents (+1 caché). Générique avec musique douce ou inquiétante selon la route.</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Dialogues clés</div>
+                <p>Good : « Merci d'avoir été là. Vraiment. » · Neutral : « On se reverra peut-être. » · Bad : « Ne me recontacte plus. Jamais. »</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Choix & Score</div>
+                <p>Pas de choix — cinématique de fin basée sur le score total cumulé. Seuils : 0-30 Bad / 31-65 Neutral / 66-100 Good.</p>
+              </div>
+              <div class="accordion-block">
+                <div class="accordion-block-label">Assets nécessaires</div>
+                <p>3 BG finaux · Sprites Étoile : 3 expressions de fin · 3 pistes musicales · Écran de crédits · CG illustration par fin</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -1707,42 +1960,27 @@ starEls.forEach(star => {
 })();
 
 // ═══════════════════════════════════════════
-// 8. TIMELINE: PING DOTS + PROGRESSIVE FILL
+// 8. SCENE ACCORDION
 // ═══════════════════════════════════════════
-(function initTimeline() {
-  const timeline = document.querySelector('.timeline');
-  if (!timeline) return;
-
-  // Create the fill element
-  const fill = document.createElement('div');
-  fill.className = 'timeline-fill';
-  timeline.prepend(fill);
-
-  const dots = timeline.querySelectorAll('.timeline-dot');
-  const items = timeline.querySelectorAll('.timeline-item');
-  const timelineRect = () => timeline.getBoundingClientRect();
-  const timelineTop = () => timeline.offsetTop;
-
-  // Ping dots on scroll reveal
-  const dotObs = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('ping');
-        dotObs.unobserve(entry.target);
+(function initAccordion() {
+  const items = document.querySelectorAll('.accordion-item');
+  items.forEach(item => {
+    const header = item.querySelector('.accordion-header');
+    const body = item.querySelector('.accordion-body');
+    header.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      // Close all
+      items.forEach(other => {
+        other.classList.remove('open');
+        other.querySelector('.accordion-body').style.maxHeight = null;
+      });
+      // Open clicked if it was closed
+      if (!isOpen) {
+        item.classList.add('open');
+        body.style.maxHeight = body.scrollHeight + 'px';
       }
     });
-  }, { threshold: 0.5 });
-  dots.forEach(d => dotObs.observe(d));
-
-  // Fill line progressively
-  function updateFill() {
-    const rect = timelineRect();
-    const viewMid = window.innerHeight * 0.7;
-    const progress = Math.min(Math.max((viewMid - rect.top) / rect.height, 0), 1);
-    fill.style.height = (progress * 100) + '%';
-    requestAnimationFrame(updateFill);
-  }
-  requestAnimationFrame(updateFill);
+  });
 })();
 
 // ═══════════════════════════════════════════
